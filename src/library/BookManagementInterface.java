@@ -1,20 +1,20 @@
 package library;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import book.Book;
 import book.PhysicalBook;
 
-public interface ManagementInterface {
+public interface BookManagementInterface {
     void addBook(Book book);
 
     void removeBook(Book book);
 
-    ArrayList<Book> getBooks();
+    Map<Book, Integer> getAvailableBooks();
 
-    ArrayList<Book> getAvailableBooks();
+    Map<Book, Integer> getBorrowedBooks();
 
-    ArrayList<Book> getBorrowedBooks();
+    boolean isBookOwnedByLibrary(Book book);
 
     boolean isBookAvailable(Book book);
 

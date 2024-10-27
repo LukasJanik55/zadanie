@@ -7,7 +7,6 @@ public abstract class Book implements BookInterface {
     public final int year;
     public final int numberOfPages;
     protected double value;
-    protected boolean isBorrowed;
 
     protected Book(String title, String author, int year, String isbn, double value, int numberOfPages) {
         this.isbn = isbn;
@@ -16,17 +15,6 @@ public abstract class Book implements BookInterface {
         this.year = year;
         this.value = value;
         this.numberOfPages = numberOfPages;
-        this.isBorrowed = false;
-    }
-
-    @Override
-    public Boolean isBorrowed() {
-        return isBorrowed;
-    }
-
-    @Override
-    public void setBorrowed(boolean borrowed) {
-        isBorrowed = borrowed;
     }
 
     @Override
