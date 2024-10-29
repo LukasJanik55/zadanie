@@ -29,13 +29,7 @@ public class App {
                 librarian.addBookToLibrary(book5);
                 // librarian.addBookToLibrary(digitalBook);
 
-                // list all books
-                librarian.listAvailableBooks();
-
-                librarian.lendBook(book1);
-                librarian.lendBook(book1);
-                librarian.lendBook(book1);
-                librarian.returnBook(book1);
-
+                // start user interaction
+                librarian.interactWithUser(System.in);
         }
 }
