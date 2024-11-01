@@ -1,6 +1,8 @@
+import java.time.LocalDate;
 import book.Book;
-import book.PhysicalBook;
-import book.SignedBook;
+import book.CoverType;
+import book.PhysicalBook.PhysicalBookBuilder;
+import book.SignedBook.SignedBookBuilder;
 import library.Librarian;
 
 public class App {
@@ -8,21 +10,76 @@ public class App {
                 // initialize the librarian
                 Librarian librarian = new Librarian("Berry");
 
+                // initialize book builders
+                PhysicalBookBuilder physicalBookBuilder = new PhysicalBookBuilder();
+                SignedBookBuilder signedBookBuilder = new SignedBookBuilder();
+
                 // create some books and add them to the library
-                Book book1 = new PhysicalBook("1984", "George Orwell", 1949, "9780451524935", 20, 328);
-                Book book11 = new SignedBook("1984", "George Orwell", 1949, "9780451524935", 20, 328);
-                Book book2 = new PhysicalBook("Pride and Prejudice", "Jane Austen", 1813, "9781503290563", 10, 279);
-                Book book3 = new PhysicalBook("The Great Gatsby", "F. Scott Fitzgerald", 1925, "9780743273565", 15,
-                                180);
-                Book book4 = new SignedBook("The Lord of the Rings", "J.R.R. Tolkien", 1954, "9780544003415", 30, 1178);
-                Book book5 = new PhysicalBook("The Hobbit", "J.R.R. Tolkien", 1937, "9780345339683", 20, 320);
+                Book book1 = physicalBookBuilder
+                                .materialType(CoverType.PAPERBACK)
+                                .title("1984")
+                                .author("George Orwell")
+                                .publisher("Secker & Warburg")
+                                .year(1949)
+                                .isbn("9780451524935")
+                                .value(20)
+                                .numberOfPages(328)
+                                .build();
+
+                Book book2 = physicalBookBuilder
+                                .materialType(CoverType.HARDCOVER)
+                                .title("Pride and Prejudice")
+                                .author("Jane Austen")
+                                .publisher("T. Egerton, Whitehall")
+                                .year(1813)
+                                .isbn("9781503290563")
+                                .value(10)
+                                .numberOfPages(279)
+                                .build();
+
+                Book book3 = physicalBookBuilder
+                                .materialType(CoverType.LEATHER_BOUND)
+                                .title("The Great Gatsby")
+                                .author("F. Scott Fitzgerald")
+                                .publisher("Charles Scribner's Sons")
+                                .year(1925)
+                                .isbn("9780743273565")
+                                .value(15)
+                                .numberOfPages(180)
+                                .build();
+
+                Book book4 = signedBookBuilder
+                                .signer("J.R.R. Tolkien")
+                                .signedDate(LocalDate.of(2024, 5, 18))
+                                .signatureNumber(1)
+                                .signatureCount(3)
+                                .materialType(CoverType.HARDCOVER)
+                                .title("The Lord of the Rings")
+                                .author("J.R.R. Tolkien")
+                                .publisher("George Allen & Unwin")
+                                .year(1954)
+                                .isbn("9780544003415")
+                                .value(30)
+                                .numberOfPages(1178)
+                                .build();
+
+                Book book5 = physicalBookBuilder
+                                .materialType(CoverType.PAPERBACK)
+                                .title("The Hobbit")
+                                .author("J.R.R. Tolkien")
+                                .publisher("George Allen & Unwin")
+                                .year(1937)
+                                .isbn("9780345339683")
+                                .value(20)
+                                .numberOfPages(320)
+                                .build();
+
                 // Book digitalBook = new DigitalBook("Pride and Prejudice", "Jane Austen",
                 // 1813, "9781503290563", 10,
                 // 279);
 
                 librarian.addBookToLibrary(book1); // two instances of book1
                 librarian.addBookToLibrary(book1);
-                librarian.addBookToLibrary(book11);
                 librarian.addBookToLibrary(book2);
                 librarian.addBookToLibrary(book3);
                 librarian.addBookToLibrary(book4);

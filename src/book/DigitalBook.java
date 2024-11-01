@@ -2,8 +2,21 @@ package book;
 
 public class DigitalBook extends Book {
 
-    public DigitalBook(String title, String author, int year, String isbn, double value, int numberOfPages) {
-        super(title, author, year, isbn, value, numberOfPages);
+    protected DigitalBook(DigitalBookBuilder builder) {
+        super(builder);
+    }
+
+    public static class DigitalBookBuilder extends BookBuilder {
+
+        @Override
+        public DigitalBook build() {
+            return new DigitalBook(this);
+        }
+
+        @Override
+        protected DigitalBookBuilder self() {
+            return this;
+        }
     }
 
 }

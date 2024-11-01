@@ -1,9 +1,86 @@
 package book;
 
-public class SignedBook extends PhysicalBook {
+import java.time.LocalDate;
 
-    public SignedBook(String title, String author, int year, String isbn, int value, int numberOfPages) {
-        super(title, author, year, isbn, value, numberOfPages);
+public class SignedBook extends PhysicalBook {
+    public final String signer;
+    public final LocalDate signedDate;
+    public final int signatureNumber;
+    public final int signatureCount;
+
+    protected SignedBook(SignedBookBuilder builder) {
+        super(builder);
+        this.signer = builder.signer;
+        this.signedDate = builder.signedDate;
+        this.signatureNumber = builder.signatureNumber;
+        this.signatureCount = builder.signatureCount;
     }
 
+    public static class SignedBookBuilder extends PhysicalBookBuilder {
+        private String signer;
+        private LocalDate signedDate;
+        private int signatureNumber;
+        private int signatureCount;
+
+        public SignedBookBuilder signer(String signer) {
+            this.signer = signer;
+            return self();
+        }
+
+        public SignedBookBuilder signedDate(LocalDate signedDate) {
+            this.signedDate = signedDate;
+            return self();
+        }
+
+        public SignedBookBuilder signatureNumber(int signatureNumber) {
+            this.signatureNumber = signatureNumber;
+            return self();
+        }
+
+        public SignedBookBuilder signatureCount(int signatureCount) {
+            this.signatureCount = signatureCount;
+            return self();
+        }
+
+        @Override
+        protected SignedBookBuilder self() {
+            return this;
+        }
+
+        @Override
+        public SignedBook build() {
+            if (signer == null) {
+                throw new IllegalStateException("Signer is required");
+            }
+
+            if (signedDate == null) {
+                throw new IllegalStateException("Signed date is required");
+            }
+
+            if (signatureNumber <= 0) {
+                throw new IllegalStateException("Signature number must be greater than 0");
+            }
+
+            if (signatureCount <= 0) {
+                throw new IllegalStateException("Signature count must be greater than 0");
+            }
+
+            return new SignedBook(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + "\n" +
+                "Author: " + author + "\n" +
+                "Publisher: " + publisher + "\n" +
+                "Year: " + year + "\n" +
+                "ISBN: " + isbn + "\n" +
+                "Value: " + value + "\n" +
+                "Number of Pages: " + numberOfPages + "\n" +
+                "Condition: " + condition + "\n" +
+                "Signed by: " + signer + "\n" +
+                "Signature: " + signatureNumber + "/" + signatureCount + "\n" +
+                "Signature Date: " + signedDate + "\n";
+    }
 }
