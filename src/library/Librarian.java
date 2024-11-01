@@ -33,16 +33,25 @@ public class Librarian implements LibrarianInterface, TransferInterface {
 
         static void commandList() {
             System.out.println("To list all available books, type 'list'");
-            System.out.println("To borrow a book, type 'borrow'");
-            System.out.println("To return a book, type 'return'");
+            System.out.println("For more information about a book, type 'info' with index of the book, e.g. 'info 1'");
+            System.out.println("To borrow a book, type 'borrow' with index of the book, e.g. 'borrow 1'");
+            System.out.println("To return a book, type 'return' with index of the book, e.g. 'return 1'");
             System.out.println("To exit the library, type 'exit'");
             System.out.println("To check available commands, type 'help'");
         }
 
         static void listAvailableBooks(Map<Book, Integer> books) {
             System.out.println("-----------------------------\n");
-            books.forEach((book, count) -> System.out.println(count + "x " + book));
+            for (int i = 0; i < books.size(); i++) {
+                Book book = (Book) books.keySet().toArray()[i];
+                System.out.print("[" + i + "] ");
+                book.printInfo();
+            }
             System.out.println("-----------------------------");
+        }
+
+        static void bookInfo(Book book) {
+            System.out.println(book);
         }
 
         static void borrowMessage(Book book) {
@@ -50,8 +59,8 @@ public class Librarian implements LibrarianInterface, TransferInterface {
                     book.author);
         }
 
-        static void unavailableMessage() {
-            System.out.println("Sorry, this book is not available.");
+        static void errorMessage(String message) {
+            System.out.println(message);
         }
 
         static void returnMessage(Book book) {
@@ -74,23 +83,17 @@ public class Librarian implements LibrarianInterface, TransferInterface {
     }
 
     @Override
-    public void listAvailableBooks() {
-        Map<Book, Integer> books = bl.getAvailableBooks();
-        CommunicationClass.listAvailableBooks(books);
-    }
-
-    @Override
     public void addBookToLibrary(Book book) {
         bl.addBook(book);
     }
 
     @Override
     public void lendBook(Book book) {
-        if (bl.isBookAvailable(book)) {
+        try {
             bl.lendBook(book);
             CommunicationClass.borrowMessage(book);
-        } else {
-            CommunicationClass.unavailableMessage();
+        } catch (IllegalArgumentException e) {
+            CommunicationClass.errorMessage(e.getMessage());
             // if (bl.isDigitalEquivalentAvailable((PhysicalBook) book)) {
             // System.out.println("But there is a digital version available.");
             // }
@@ -99,18 +102,31 @@ public class Librarian implements LibrarianInterface, TransferInterface {
 
     @Override
     public void returnBook(Book book) {
-        bl.returnBook(book);
-        CommunicationClass.returnMessage(book);
+        try {
+            bl.returnBook(book);
+            CommunicationClass.returnMessage(book);
+        } catch (IllegalArgumentException e) {
+            CommunicationClass.errorMessage(e.getMessage());
+        }
     }
 
     @Override
     public void interactWithUser(InputStream inputStream) {
         CommunicationClass.welcomeMessage(this.name);
+
+        // get available books
+        Map<Book, Integer> books = bl.getAvailableBooks();
+
+        // scanner object to get input from the user
         Scanner scanner = new Scanner(inputStream);
 
         while (true) {
             // get input from user
             CommunicationClass.enterCommand();
+
+            // TODO: parse command and arguments
+            // TODO: validate arguments
+
             Command command = Command.fromString(scanner.nextLine().toUpperCase());
 
             // check if the command is valid
@@ -121,13 +137,19 @@ public class Librarian implements LibrarianInterface, TransferInterface {
 
             switch (command) {
                 case LIST:
-                    listAvailableBooks();
+                    CommunicationClass.listAvailableBooks(books);
+                    break;
+                case INFO:
+                    // TODO: finish
+                    CommunicationClass.bookInfo((Book) books.keySet().toArray()[0]);
                     break;
                 case BORROW:
-                    // lendBook(1);
+                    // TODO: finish
+                    lendBook((Book) books.keySet().toArray()[0]);
                     break;
                 case RETURN:
-                    // returnBook(1);
+                    // TODO: finish
+                    returnBook((Book) books.keySet().toArray()[0]);
                     break;
                 case HELP:
                     CommunicationClass.showHelp();

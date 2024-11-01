@@ -19,4 +19,9 @@ public class DigitalBook extends Book {
         }
     }
 
+    @Override
+    public void printInfo() {
+        System.out.println(title + " (" + year + ")" + " - " + author + "\n");
+    }
+
 }

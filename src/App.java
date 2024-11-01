@@ -22,7 +22,6 @@ public class App {
                                 .publisher("Secker & Warburg")
                                 .year(1949)
                                 .isbn("9780451524935")
-                                .value(20)
                                 .numberOfPages(328)
                                 .build();
 
@@ -33,7 +32,6 @@ public class App {
                                 .publisher("T. Egerton, Whitehall")
                                 .year(1813)
                                 .isbn("9781503290563")
-                                .value(10)
                                 .numberOfPages(279)
                                 .build();
 
@@ -44,7 +42,6 @@ public class App {
                                 .publisher("Charles Scribner's Sons")
                                 .year(1925)
                                 .isbn("9780743273565")
-                                .value(15)
                                 .numberOfPages(180)
                                 .build();
 
@@ -59,7 +56,6 @@ public class App {
                                 .publisher("George Allen & Unwin")
                                 .year(1954)
                                 .isbn("9780544003415")
-                                .value(30)
                                 .numberOfPages(1178)
                                 .build();
 
@@ -70,7 +66,6 @@ public class App {
                                 .publisher("George Allen & Unwin")
                                 .year(1937)
                                 .isbn("9780345339683")
-                                .value(20)
                                 .numberOfPages(320)
                                 .build();
 

@@ -77,7 +77,7 @@ public class BookLibrary implements BookManagementInterface, TransferInterface {
     @Override
     public void lendBook(Book book) {
         if (!isBookAvailable(book)) {
-            throw new IllegalArgumentException("This book is not available");
+            throw new IllegalArgumentException("Sorry, this book is not available.");
         }
 
         // if book is not digital, decrease available count

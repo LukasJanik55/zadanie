@@ -40,13 +40,17 @@ public class PhysicalBook extends Book {
     }
 
     @Override
+    public void printInfo() {
+        System.out.println(title + " (" + year + ")" + " - " + author + "\n");
+    }
+
+    @Override
     public String toString() {
         return "Title: " + title + "\n" +
                 "Author: " + author + "\n" +
                 "Publisher: " + publisher + "\n" +
                 "Year: " + year + "\n" +
                 "ISBN: " + isbn + "\n" +
-                "Value: " + value + "\n" +
                 "Number of Pages: " + numberOfPages + "\n" +
                 "Condition: " + condition + "\n" +
                 "Cover material: " + coverMaterial + "\n";

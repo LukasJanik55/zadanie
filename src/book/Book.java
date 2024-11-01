@@ -6,7 +6,6 @@ public abstract class Book implements BookInterface {
     public final String publisher;
     public final int year;
     public final String isbn;
-    public final double value;
     public final int numberOfPages;
 
     protected Book(BookBuilder builder) {
@@ -15,7 +14,6 @@ public abstract class Book implements BookInterface {
         this.publisher = builder.publisher;
         this.year = builder.year;
         this.isbn = builder.isbn;
-        this.value = builder.value;
         this.numberOfPages = builder.numberOfPages;
     }
 
@@ -25,7 +23,6 @@ public abstract class Book implements BookInterface {
         private String publisher;
         private int year;
         private String isbn;
-        private double value;
         private int numberOfPages;
 
         public BookBuilder title(String title) {
@@ -53,11 +50,6 @@ public abstract class Book implements BookInterface {
             return self();
         }
 
-        public BookBuilder value(double value) {
-            this.value = value;
-            return self();
-        }
-
         public BookBuilder numberOfPages(int numberOfPages) {
             this.numberOfPages = numberOfPages;
             return self();
@@ -66,17 +58,6 @@ public abstract class Book implements BookInterface {
         protected abstract BookBuilder self();
 
         public abstract Book build();
-    }
-
-    @Override
-    public String toString() {
-        return "Title: " + title + "\n" +
-                "Author: " + author + "\n" +
-                "Publisher: " + publisher + "\n" +
-                "Year: " + year + "\n" +
-                "ISBN: " + isbn + "\n" +
-                "Value: " + value + "\n" +
-                "Number of Pages: " + numberOfPages + "\n";
     }
 
 }

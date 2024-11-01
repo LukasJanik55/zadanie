@@ -70,13 +70,18 @@ public class SignedBook extends PhysicalBook {
     }
 
     @Override
+    public void printInfo() {
+        System.out.println("[Signed] " + title + " (" + year + ")" + " - " + author + "\n");
+    }
+
+    @Override
     public String toString() {
-        return "Title: " + title + "\n" +
+        return "[Signed] " +
+                "Title: " + title + "\n" +
                 "Author: " + author + "\n" +
                 "Publisher: " + publisher + "\n" +
                 "Year: " + year + "\n" +
                 "ISBN: " + isbn + "\n" +
-                "Value: " + value + "\n" +
                 "Number of Pages: " + numberOfPages + "\n" +
                 "Condition: " + condition + "\n" +
                 "Signed by: " + signer + "\n" +

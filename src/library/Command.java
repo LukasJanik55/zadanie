@@ -2,6 +2,7 @@ package library;
 
 public enum Command {
     LIST,
+    INFO,
     BORROW,
     RETURN,
     HELP,
