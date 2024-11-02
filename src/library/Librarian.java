@@ -45,7 +45,7 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             for (int i = 0; i < books.size(); i++) {
                 Book book = (Book) books.keySet().toArray()[i];
                 System.out.print("[" + i + "] ");
-                book.printInfo();
+                book.printBasicInfo();
             }
             System.out.println("-----------------------------");
         }

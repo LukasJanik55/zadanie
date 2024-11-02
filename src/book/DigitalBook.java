@@ -20,7 +20,7 @@ public class DigitalBook extends Book {
     }
 
     @Override
-    public void printInfo() {
+    public void printBasicInfo() {
         System.out.println(title + " (" + year + ")" + " - " + author + "\n");
     }
 

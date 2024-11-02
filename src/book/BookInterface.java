@@ -1,7 +1,7 @@
 package book;
 
 public interface BookInterface {
-    void printInfo();
+    void printBasicInfo();
 
     String toString();
 }
