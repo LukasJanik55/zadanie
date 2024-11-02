@@ -40,12 +40,21 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             System.out.println("To check available commands, type 'help'");
         }
 
-        static void listAvailableBooks(Map<Book, Integer> books) {
+        static void listBooks(Map<Book, Integer> books) {
             System.out.println("-----------------------------\n");
             for (int i = 0; i < books.size(); i++) {
                 Book book = (Book) books.keySet().toArray()[i];
-                System.out.print("[" + i + "] ");
+                int copies = books.get(book);
+
+                System.out.print("[" + (i + 1) + "] ");
                 book.printBasicInfo();
+
+                if (copies == 1) {
+                    System.out.println("    " + copies + " copy available");
+                } else {
+                    System.out.println("    " + copies + " copies available");
+                }
+                System.out.println();
             }
             System.out.println("-----------------------------");
         }
@@ -110,46 +119,93 @@ public class Librarian implements LibrarianInterface, TransferInterface {
         }
     }
 
+    private boolean isUserInputValid(String[] input, int availableBooksSize, int borrowedBooksSize) {
+        // validate input length
+        if (input.length == 0 || input.length > 2) {
+            return false;
+        }
+
+        // check validity of command
+        Command command = Command.fromString(input[0]);
+        if (command == null) {
+            return false;
+        }
+
+        // validate commands
+        if (command == Command.LIST || command == Command.HELP || command == Command.EXIT) {
+            // check if command is unnecessarily followed by an argument
+            if (input.length > 1) {
+                return false;
+            }
+        } else {
+            // check if argument value is present
+            if (input.length != 2) {
+                return false;
+            }
+
+            // check if argument is an integer
+            try {
+                Integer.parseInt(input[1]);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+
+        }
+
+        // check if the book index is within the size of books collection
+        if (command == Command.BORROW) {
+            if (Integer.parseInt(input[1]) < 1 || Integer.parseInt(input[1]) > availableBooksSize) {
+                return false;
+            }
+        } else if (command == Command.RETURN) {
+            if (Integer.parseInt(input[1]) < 1 || Integer.parseInt(input[1]) > borrowedBooksSize) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public void interactWithUser(InputStream inputStream) {
         CommunicationClass.welcomeMessage(this.name);
 
         // get available books
-        Map<Book, Integer> books = bl.getAvailableBooks();
+        Map<Book, Integer> availableBooks = bl.getAvailableBooks();
+        Map<Book, Integer> borrowedBooks = bl.getBorrowedBooks();
 
         // scanner object to get input from the user
         Scanner scanner = new Scanner(inputStream);
 
         while (true) {
-            // get input from user
             CommunicationClass.enterCommand();
 
-            // TODO: parse command and arguments
-            // TODO: validate arguments
+            // get input from user
+            String[] input = scanner.nextLine().strip().split(" ");
 
-            Command command = Command.fromString(scanner.nextLine().toUpperCase());
-
-            // check if the command is valid
-            if (command == null) {
+            // validate input
+            if (!isUserInputValid(input, availableBooks.size(), borrowedBooks.size())) {
                 CommunicationClass.invalidCommandMessage();
                 continue;
             }
 
+            Command command = Command.fromString(input[0]);
             switch (command) {
                 case LIST:
-                    CommunicationClass.listAvailableBooks(books);
+                    CommunicationClass.listBooks(availableBooks);
+                    CommunicationClass.listBooks(borrowedBooks);
                     break;
                 case INFO:
-                    // TODO: finish
-                    CommunicationClass.bookInfo((Book) books.keySet().toArray()[0]);
+                    CommunicationClass
+                            .bookInfo((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
                     break;
                 case BORROW:
-                    // TODO: finish
-                    lendBook((Book) books.keySet().toArray()[0]);
+                    lendBook((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
+                    availableBooks = bl.getAvailableBooks();
                     break;
                 case RETURN:
-                    // TODO: finish
-                    returnBook((Book) books.keySet().toArray()[0]);
+                    returnBook((Book) borrowedBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
+                    borrowedBooks = bl.getBorrowedBooks();
                     break;
                 case HELP:
                     CommunicationClass.showHelp();

@@ -71,7 +71,7 @@ public class SignedBook extends PhysicalBook {
 
     @Override
     public void printBasicInfo() {
-        System.out.println("[Signed] " + title + " (" + year + ")" + " - " + author + "\n");
+        System.out.println("[Signed] " + title + " (" + year + ")" + " - " + author);
     }
 
     @Override

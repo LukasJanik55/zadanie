@@ -41,7 +41,7 @@ public class PhysicalBook extends Book {
 
     @Override
     public void printBasicInfo() {
-        System.out.println(title + " (" + year + ")" + " - " + author + "\n");
+        System.out.println(title + " (" + year + ")" + " - " + author);
     }
 
     @Override

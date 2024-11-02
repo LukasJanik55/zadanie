@@ -83,6 +83,9 @@ public class BookLibrary implements BookManagementInterface, TransferInterface {
         // if book is not digital, decrease available count
         if (!(book instanceof DigitalBook)) {
             availableBooks.put(book, availableBooks.get(book) - 1);
+            if (availableBooks.get(book) == 0) {
+                availableBooks.remove(book);
+            }
         }
 
         // increase borrowed count
