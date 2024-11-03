@@ -84,8 +84,9 @@ public class SignedBook extends PhysicalBook {
                 "ISBN: " + isbn + "\n" +
                 "Number of Pages: " + numberOfPages + "\n" +
                 "Condition: " + condition + "\n" +
+                "Cover material: " + coverMaterial + "\n" +
                 "Signed by: " + signer + "\n" +
                 "Signature: " + signatureNumber + "/" + signatureCount + "\n" +
-                "Signature Date: " + signedDate + "\n";
+                "Signature Date: " + signedDate;
     }
 }

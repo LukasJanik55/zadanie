@@ -16,51 +16,49 @@ public class Librarian implements LibrarianInterface, TransferInterface {
     }
 
     private abstract class CommunicationClass {
+        private static final String COMMANDS = "To list all available books, type 'list'\n" +
+                "For more information about a book, type 'info' with the index, e.g. 'info 1'\n" +
+                "To borrow a book, type 'borrow' with the index, e.g. 'borrow 1'\n" +
+                "To return a book, type 'return' with the index, e.g. 'return 1'\n" +
+                "To see available commands, type 'help'\n" +
+                "To exit, type 'exit'";
+
+        private static final String DIVIDER = "-----------------------------";
 
         static void welcomeMessage(String name) {
-            System.out.println("####################################");
+            System.out.println(DIVIDER);
             System.out.println("Welcome to the Library");
             System.out.println("My name is " + name + ", how may I help you?\n");
-
-            commandList();
-
-            System.out.println("####################################\n");
+            System.out.println(COMMANDS);
+            System.out.println(DIVIDER);
         }
 
         static void enterCommand() {
             System.out.print("\nEnter a command: ");
         }
 
-        static void commandList() {
-            System.out.println("To list all available books, type 'list'");
-            System.out.println("For more information about a book, type 'info' with index of the book, e.g. 'info 1'");
-            System.out.println("To borrow a book, type 'borrow' with index of the book, e.g. 'borrow 1'");
-            System.out.println("To return a book, type 'return' with index of the book, e.g. 'return 1'");
-            System.out.println("To exit the library, type 'exit'");
-            System.out.println("To check available commands, type 'help'");
+        static void printTitle(String title) {
+            System.out.println("            [" + title + "]\n");
         }
 
-        static void listBooks(Map<Book, Integer> books) {
-            System.out.println("-----------------------------\n");
+        static void listBooks(Map<Book, Integer> books, String title) {
+            System.out.println(DIVIDER);
+            printTitle(title);
             for (int i = 0; i < books.size(); i++) {
                 Book book = (Book) books.keySet().toArray()[i];
                 int copies = books.get(book);
 
                 System.out.print("[" + (i + 1) + "] ");
                 book.printBasicInfo();
-
-                if (copies == 1) {
-                    System.out.println("    " + copies + " copy available");
-                } else {
-                    System.out.println("    " + copies + " copies available");
-                }
-                System.out.println();
+                System.out.println("    " + copies + (copies == 1 ? " copy available" : " copies available") + "\n");
             }
-            System.out.println("-----------------------------");
+            System.out.println(DIVIDER);
         }
 
         static void bookInfo(Book book) {
+            System.out.println(DIVIDER);
             System.out.println(book);
+            System.out.println(DIVIDER);
         }
 
         static void borrowMessage(Book book) {
@@ -82,8 +80,10 @@ public class Librarian implements LibrarianInterface, TransferInterface {
         }
 
         static void showHelp() {
-            System.out.println("Available commands:");
-            commandList();
+            System.out.println(DIVIDER);
+            printTitle("Available commands");
+            System.out.println(COMMANDS);
+            System.out.println(DIVIDER);
         }
 
         static void invalidCommandMessage() {
@@ -170,7 +170,7 @@ public class Librarian implements LibrarianInterface, TransferInterface {
     public void interactWithUser(InputStream inputStream) {
         CommunicationClass.welcomeMessage(this.name);
 
-        // get available books
+        // get available and borrowed books
         Map<Book, Integer> availableBooks = bl.getAvailableBooks();
         Map<Book, Integer> borrowedBooks = bl.getBorrowedBooks();
 
@@ -192,8 +192,8 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             Command command = Command.fromString(input[0]);
             switch (command) {
                 case LIST:
-                    CommunicationClass.listBooks(availableBooks);
-                    CommunicationClass.listBooks(borrowedBooks);
+                    CommunicationClass.listBooks(availableBooks, "Available Books");
+                    CommunicationClass.listBooks(borrowedBooks, "Borrowed Books");
                     break;
                 case INFO:
                     CommunicationClass

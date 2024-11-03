@@ -53,7 +53,7 @@ public class PhysicalBook extends Book {
                 "ISBN: " + isbn + "\n" +
                 "Number of Pages: " + numberOfPages + "\n" +
                 "Condition: " + condition + "\n" +
-                "Cover material: " + coverMaterial + "\n";
+                "Cover material: " + coverMaterial;
     }
 
 }
