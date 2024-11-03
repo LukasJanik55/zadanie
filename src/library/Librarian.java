@@ -131,36 +131,33 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             return false;
         }
 
-        // validate commands
+        // validate single-word commands
         if (command == Command.LIST || command == Command.HELP || command == Command.EXIT) {
-            // check if command is unnecessarily followed by an argument
-            if (input.length > 1) {
-                return false;
-            }
-        } else {
-            // check if argument value is present
-            if (input.length != 2) {
-                return false;
-            }
-
-            // check if argument is an integer
-            try {
-                Integer.parseInt(input[1]);
-            } catch (NumberFormatException e) {
-                return false;
-            }
-
+            return input.length == 1;
         }
 
-        // check if the book index is within the size of books collection
-        if (command == Command.BORROW) {
-            if (Integer.parseInt(input[1]) < 1 || Integer.parseInt(input[1]) > availableBooksSize) {
-                return false;
-            }
-        } else if (command == Command.RETURN) {
-            if (Integer.parseInt(input[1]) < 1 || Integer.parseInt(input[1]) > borrowedBooksSize) {
-                return false;
-            }
+        // validate two-word command length
+        if (input.length != 2) {
+            return false;
+        }
+
+        // check if argument is an integer
+        int bookIndex;
+        try {
+            bookIndex = Integer.parseInt(input[1]);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        // validate index bounds
+        if (command == Command.INFO && (bookIndex < 1 || bookIndex > availableBooksSize)) {
+            return false;
+        }
+        if (command == Command.BORROW && (bookIndex < 1 || bookIndex > availableBooksSize)) {
+            return false;
+        }
+        if (command == Command.RETURN && (bookIndex < 1 || bookIndex > borrowedBooksSize)) {
+            return false;
         }
 
         return true;
