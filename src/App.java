@@ -1,6 +1,10 @@
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 import book.Book;
 import book.CoverType;
+import book.DigitalBook.DigitalBookBuilder;
 import book.PhysicalBook.PhysicalBookBuilder;
 import book.SignedBook.SignedBookBuilder;
 import library.Librarian;
@@ -13,8 +17,9 @@ public class App {
                 // initialize book builders
                 PhysicalBookBuilder physicalBookBuilder = new PhysicalBookBuilder();
                 SignedBookBuilder signedBookBuilder = new SignedBookBuilder();
+                DigitalBookBuilder digitalBookBuilder = new DigitalBookBuilder();
 
-                // create some books and add them to the library
+                // create some books
                 Book book1 = physicalBookBuilder
                                 .materialType(CoverType.PAPERBACK)
                                 .title("1984")
@@ -69,19 +74,29 @@ public class App {
                                 .numberOfPages(320)
                                 .build();
 
-                // Book digitalBook = new DigitalBook("Pride and Prejudice", "Jane Austen",
-                // 1813, "9781503290563", 10,
-                // 279);
+                Book digitalBook = digitalBookBuilder
+                                .format("EPUB")
+                                .fileSize(2.5)
+                                .isDRMProtected(true)
+                                .title("The Hobbit")
+                                .author("J.R.R. Tolkien")
+                                .publisher("George Allen & Unwin")
+                                .year(1937)
+                                .isbn("9780345339683")
+                                .numberOfPages(320)
+                                .build();
 
+                // add books to the library
                 librarian.addBookToLibrary(book1); // two instances of book1
                 librarian.addBookToLibrary(book1);
                 librarian.addBookToLibrary(book2);
                 librarian.addBookToLibrary(book3);
                 librarian.addBookToLibrary(book4);
                 librarian.addBookToLibrary(book5);
-                // librarian.addBookToLibrary(digitalBook);
+                librarian.addBookToLibrary(digitalBook);
 
                 // start user interaction
-                librarian.interactWithUser(System.in);
+                Set<Book> userBorrowedBooks = new HashSet<>();
+                librarian.interactWithUser(System.in, userBorrowedBooks);
         }
 }

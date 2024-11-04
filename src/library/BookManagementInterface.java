@@ -3,7 +3,6 @@ package library;
 import java.util.Map;
 
 import book.Book;
-import book.PhysicalBook;
 
 public interface BookManagementInterface {
     void addBook(Book book);
@@ -17,6 +16,4 @@ public interface BookManagementInterface {
     boolean isBookOwnedByLibrary(Book book);
 
     boolean isBookAvailable(Book book);
-
-    boolean isDigitalEquivalentAvailable(PhysicalBook book);
 }

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import book.Book;
 import book.DigitalBook;
-import book.PhysicalBook;
 
 public class BookLibrary implements BookManagementInterface, TransferInterface {
     private static BookLibrary instance;
@@ -108,12 +107,6 @@ public class BookLibrary implements BookManagementInterface, TransferInterface {
         if (borrowedBooks.get(book) == 0) {
             borrowedBooks.remove(book);
         }
-    }
-
-    @Override
-    public boolean isDigitalEquivalentAvailable(PhysicalBook physicalBook) {
-
-        return false;
     }
 
 }

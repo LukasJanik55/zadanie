@@ -2,9 +2,11 @@ package library;
 
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.io.InputStream;
 
 import book.Book;
+import book.DigitalBook;
 
 public class Librarian implements LibrarianInterface, TransferInterface {
     private String name;
@@ -41,16 +43,35 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             System.out.println("            [" + title + "]\n");
         }
 
-        static void listBooks(Map<Book, Integer> books, String title) {
+        static void listAvailableBooks(Map<Book, Integer> books, String title) {
             System.out.println(DIVIDER);
             printTitle(title);
-            for (int i = 0; i < books.size(); i++) {
-                Book book = (Book) books.keySet().toArray()[i];
-                int copies = books.get(book);
+            int i = 0;
+            for (Map.Entry<Book, Integer> entry : books.entrySet()) {
+                Book book = entry.getKey();
+                int copies = entry.getValue();
 
                 System.out.print("[" + (i + 1) + "] ");
                 book.printBasicInfo();
-                System.out.println("    " + copies + (copies == 1 ? " copy available" : " copies available") + "\n");
+                if (!(book instanceof DigitalBook)) {
+                    System.out.println("    " + copies + (copies == 1 ? " copy available" : " copies available"));
+                }
+                System.out.println();
+
+                i++;
+            }
+            System.out.println(DIVIDER);
+        }
+
+        static void listUserBooks(Set<Book> books, String title) {
+            System.out.println(DIVIDER);
+            printTitle(title);
+            int i = 0;
+            for (Book book : books) {
+                System.out.print("[" + (i + 1) + "] ");
+                book.printBasicInfo();
+                System.out.println();
+                i++;
             }
             System.out.println(DIVIDER);
         }
@@ -62,8 +83,8 @@ public class Librarian implements LibrarianInterface, TransferInterface {
         }
 
         static void borrowMessage(Book book) {
-            System.out.println("You have borrowed: '" + book.title + "' by " +
-                    book.author);
+            System.out.print("You have borrowed: ");
+            book.printBasicInfo();
         }
 
         static void errorMessage(String message) {
@@ -71,8 +92,8 @@ public class Librarian implements LibrarianInterface, TransferInterface {
         }
 
         static void returnMessage(Book book) {
-            System.out.println("You have returned: '" + book.title + "' by " +
-                    book.author);
+            System.out.print("You have returned: ");
+            book.printBasicInfo();
         }
 
         static void exitMessage() {
@@ -103,9 +124,6 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             CommunicationClass.borrowMessage(book);
         } catch (IllegalArgumentException e) {
             CommunicationClass.errorMessage(e.getMessage());
-            // if (bl.isDigitalEquivalentAvailable((PhysicalBook) book)) {
-            // System.out.println("But there is a digital version available.");
-            // }
         }
     }
 
@@ -164,12 +182,11 @@ public class Librarian implements LibrarianInterface, TransferInterface {
     }
 
     @Override
-    public void interactWithUser(InputStream inputStream) {
+    public void interactWithUser(InputStream inputStream, Set<Book> userBorrowedBooks) {
         CommunicationClass.welcomeMessage(this.name);
 
-        // get available and borrowed books
+        // get available books
         Map<Book, Integer> availableBooks = bl.getAvailableBooks();
-        Map<Book, Integer> borrowedBooks = bl.getBorrowedBooks();
 
         // scanner object to get input from the user
         Scanner scanner = new Scanner(inputStream);
@@ -181,28 +198,41 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             String[] input = scanner.nextLine().strip().split(" ");
 
             // validate input
-            if (!isUserInputValid(input, availableBooks.size(), borrowedBooks.size())) {
+            if (!isUserInputValid(input, availableBooks.size(), userBorrowedBooks.size())) {
                 CommunicationClass.invalidCommandMessage();
                 continue;
             }
 
+            Book book = null;
             Command command = Command.fromString(input[0]);
             switch (command) {
                 case LIST:
-                    CommunicationClass.listBooks(availableBooks, "Available Books");
-                    CommunicationClass.listBooks(borrowedBooks, "Borrowed Books");
+                    CommunicationClass.listAvailableBooks(availableBooks, "Available Books");
+                    CommunicationClass.listUserBooks(userBorrowedBooks, "Borrowed Books");
                     break;
                 case INFO:
                     CommunicationClass
                             .bookInfo((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
                     break;
                 case BORROW:
-                    lendBook((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
+                    // get book from available books
+                    book = ((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
+
+                    // check if the user has already borrowed the book
+                    if (userBorrowedBooks.contains(book)) {
+                        CommunicationClass.errorMessage("You have already borrowed this book.");
+                        break;
+                    }
+
+                    // lend the book
+                    lendBook(book);
                     availableBooks = bl.getAvailableBooks();
+                    userBorrowedBooks.add(book);
                     break;
                 case RETURN:
-                    returnBook((Book) borrowedBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
-                    borrowedBooks = bl.getBorrowedBooks();
+                    book = (Book) userBorrowedBooks.toArray()[Integer.parseInt(input[1]) - 1];
+                    returnBook(book);
+                    userBorrowedBooks.remove(book);
                     break;
                 case HELP:
                     CommunicationClass.showHelp();
