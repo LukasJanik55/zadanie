@@ -43,7 +43,7 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             System.out.println("            [" + title + "]\n");
         }
 
-        static void listAvailableBooks(Map<Book, Integer> books, String title) {
+        static void listBooks(Map<Book, Integer> books, String title) {
             System.out.println(DIVIDER);
             printTitle(title);
             int i = 0;
@@ -63,7 +63,7 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             System.out.println(DIVIDER);
         }
 
-        static void listUserBooks(Set<Book> books, String title) {
+        static void listBooks(Set<Book> books, String title) {
             System.out.println(DIVIDER);
             printTitle(title);
             int i = 0;
@@ -181,6 +181,14 @@ public class Librarian implements LibrarianInterface, TransferInterface {
         return true;
     }
 
+    private Book getBookFromCollection(Map<Book, Integer> books, int index) {
+        return (Book) books.keySet().toArray()[index - 1];
+    }
+
+    private Book getBookFromCollection(Set<Book> books, int index) {
+        return (Book) books.toArray()[index - 1];
+    }
+
     @Override
     public void interactWithUser(InputStream inputStream, Set<Book> userBorrowedBooks) {
         CommunicationClass.welcomeMessage(this.name);
@@ -207,16 +215,15 @@ public class Librarian implements LibrarianInterface, TransferInterface {
             Command command = Command.fromString(input[0]);
             switch (command) {
                 case LIST:
-                    CommunicationClass.listAvailableBooks(availableBooks, "Available Books");
-                    CommunicationClass.listUserBooks(userBorrowedBooks, "Borrowed Books");
+                    CommunicationClass.listBooks(availableBooks, "Available Books");
+                    CommunicationClass.listBooks(userBorrowedBooks, "Borrowed Books");
                     break;
                 case INFO:
-                    CommunicationClass
-                            .bookInfo((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
+                    CommunicationClass.bookInfo(getBookFromCollection(availableBooks, Integer.parseInt(input[1])));
                     break;
                 case BORROW:
                     // get book from available books
-                    book = ((Book) availableBooks.keySet().toArray()[Integer.parseInt(input[1]) - 1]);
+                    book = getBookFromCollection(availableBooks, Integer.parseInt(input[1]));
 
                     // check if the user has already borrowed the book
                     if (userBorrowedBooks.contains(book)) {
@@ -230,7 +237,7 @@ public class Librarian implements LibrarianInterface, TransferInterface {
                     userBorrowedBooks.add(book);
                     break;
                 case RETURN:
-                    book = (Book) userBorrowedBooks.toArray()[Integer.parseInt(input[1]) - 1];
+                    book = getBookFromCollection(userBorrowedBooks, Integer.parseInt(input[1]));
                     returnBook(book);
                     userBorrowedBooks.remove(book);
                     break;
